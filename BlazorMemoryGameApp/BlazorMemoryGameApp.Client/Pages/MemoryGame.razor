@@ -10,9 +10,11 @@
 }
 else if (gameState == GameState.Menu)
 {
-	<button @onclick=@(() => ChangeGameState(GameState.Play)) class="btn btn-primary">Start</button>
+	<button @onclick=@(() => StartGame()) class="btn btn-primary">Start</button>
 } else if (gameState == GameState.Play)
 {
+	
+	<div>Time: @Time</div>
 	<div class="row g-5">
 		@foreach (var card in cards)
 		{
@@ -27,6 +29,7 @@ else if (gameState == GameState.Menu)
 } else if(gameState == GameState.Result)
 {
 	<div>You Won!</div>
+	<div>Your Time: @Time</div>
 	<button @onclick=@(() => ResetGame()) class="btn btn-primary">Play Again?</button>
 } else
 {
@@ -53,6 +56,10 @@ else if (gameState == GameState.Menu)
 	private bool IsCheckingCard = false;
 
 	private bool WonGame = false;
+
+	private int secondsRun = 0;
+	private System.Timers.Timer timer = null!;
+	private string Time = "00:00";
 
 
 	protected override void OnAfterRender(bool firstRender)
@@ -107,6 +114,7 @@ else if (gameState == GameState.Menu)
 	{
 		if (cards.All(card => card.Matched))
 		{
+			StopTimer();
 			gameState = GameState.Result;
 		}
 	}
@@ -116,10 +124,17 @@ else if (gameState == GameState.Menu)
 		gameState = newGameState;
 	}
 
+	private void StartGame()
+	{
+		ChangeGameState(GameState.Play);
+		StartTimer();
+	}
+
 	private void ResetGame()
 	{
 		ReshuffleCards();
 		ChangeGameState(GameState.Play);
+		StartTimer();
 	}
 
 	private void ReshuffleCards()
@@ -133,4 +148,30 @@ else if (gameState == GameState.Menu)
 		cards = cards.OrderBy(x => random.Next()).ToList();
 	}
 
+	private void StartTimer()
+	{
+		secondsRun = 0;
+		Time = "00:00";
+		timer = new System.Timers.Timer(1000);
+		timer.Elapsed += OnTimedEvent;
+		timer.Start();
+
+	}
+
+	private void StopTimer()
+	{
+		timer.Stop();
+		timer.Dispose();
+	}
+
+	private async void OnTimedEvent(object? source, ElapsedEventArgs e)
+	{
+		secondsRun++;
+		await InvokeAsync(() =>
+		{
+			Time = TimeSpan.FromSeconds(secondsRun).ToString(@"mm\:ss");
+			StateHasChanged();
+		});
+
+	}
 }
