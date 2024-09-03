@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMemoryGameApp", "Blaz
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMemoryGameApp.Client", "BlazorMemoryGameApp\BlazorMemoryGameApp.Client\BlazorMemoryGameApp.Client.csproj", "{95BE9AD3-5352-4B58-A023-666F9C267993}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMemoryGameApp.Shared", "BlazorMemoryGameApp.Shared\BlazorMemoryGameApp.Shared.csproj", "{BF147360-51AA-4C78-9126-5B4B4FF3FA7C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{95BE9AD3-5352-4B58-A023-666F9C267993}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{95BE9AD3-5352-4B58-A023-666F9C267993}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{95BE9AD3-5352-4B58-A023-666F9C267993}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BF147360-51AA-4C78-9126-5B4B4FF3FA7C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BF147360-51AA-4C78-9126-5B4B4FF3FA7C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BF147360-51AA-4C78-9126-5B4B4FF3FA7C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BF147360-51AA-4C78-9126-5B4B4FF3FA7C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
