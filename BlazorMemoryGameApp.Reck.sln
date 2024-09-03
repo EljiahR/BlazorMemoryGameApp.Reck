@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35219.272
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMemoryGameApp", "BlazorMemoryGameApp\BlazorMemoryGameApp\BlazorMemoryGameApp.csproj", "{5EF3AD0F-48A7-4338-B5BD-61C62FAD0C33}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlazorMemoryGameApp.Client", "BlazorMemoryGameApp\BlazorMemoryGameApp.Client\BlazorMemoryGameApp.Client.csproj", "{95BE9AD3-5352-4B58-A023-666F9C267993}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5EF3AD0F-48A7-4338-B5BD-61C62FAD0C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5EF3AD0F-48A7-4338-B5BD-61C62FAD0C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5EF3AD0F-48A7-4338-B5BD-61C62FAD0C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5EF3AD0F-48A7-4338-B5BD-61C62FAD0C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{95BE9AD3-5352-4B58-A023-666F9C267993}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{95BE9AD3-5352-4B58-A023-666F9C267993}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{95BE9AD3-5352-4B58-A023-666F9C267993}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{95BE9AD3-5352-4B58-A023-666F9C267993}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3795696F-4FF8-414F-B5CD-CD32F17EF119}
+	EndGlobalSection
+EndGlobal
