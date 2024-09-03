@@ -2,7 +2,7 @@
 @rendermode InteractiveWebAssembly
 @inject NavigationManager Navigation
 
-<h3>Memory Game</h3>
+<h3 class="text-center">Memory Game</h3>
 
 @if (cards.Count == 0)
 {
@@ -15,11 +15,11 @@ else if (gameState == GameState.Menu)
 {
 	
 	<div>Time: @Time</div>
-	<div class="row g-5">
+	<div class="row g-3">
 		@foreach (var card in cards)
 		{
-			<div @onclick=@(() => SelectCardAsync(card)) style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
-				@if (card.Selected || card.Matched)
+			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="col-4 card text-white bg-primary text-center">
+				@if (card.Selected)
 				{
 					@card.Content
 				}
@@ -73,7 +73,10 @@ else if (gameState == GameState.Menu)
 				new Card { Id = 3, Content = "D" },
 				new Card { Id = 1, Content = "B" },
 				new Card { Id = 2, Content = "P" },
-				new Card { Id = 3, Content = "D" }
+				new Card { Id = 3, Content = "D" },
+				new Card { Id = 4, Content = "E"},
+				new Card { Id = 4, Content = "E"},
+				new Card { Id = 5, Content = "C", Matched = true, NoPair = true}
 			};
 
 			cards = cards.OrderBy(x => random.Next()).ToList();
@@ -83,7 +86,7 @@ else if (gameState == GameState.Menu)
 
 	private async Task SelectCardAsync(Card selectedCard)
 	{
-		if (selectedCard.Matched || selectedCard == previousCard || IsCheckingCard) return;
+		if ((selectedCard.Matched && !selectedCard.NoPair) || selectedCard == previousCard || IsCheckingCard) return;
 
 		selectedCard.Selected = true;
 
@@ -142,7 +145,7 @@ else if (gameState == GameState.Menu)
 		foreach (var card in cards)
 		{
 			card.Selected = false;
-			card.Matched = false;
+			card.Matched = card.NoPair;
 		}
 
 		cards = cards.OrderBy(x => random.Next()).ToList();

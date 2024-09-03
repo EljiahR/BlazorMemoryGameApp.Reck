@@ -12,4 +12,6 @@ public class Card
 	public string? Content { get; set; }
 	public bool Selected { get; set; } = false;
 	public bool Matched { get; set; } = false;
+
+	public bool NoPair { get; set; } = false;
 }
