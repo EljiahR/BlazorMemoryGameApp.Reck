@@ -4,13 +4,18 @@
 
 <h3>Memory Game</h3>
 
-<div class="container">
+<div class="container px-4">
 	@if (shuffledCards.Count > 0)
 	{
-		<div class="row">
+		<div class="row g-5">
 			@foreach (var card in shuffledCards)
 			{
-				<div class="col-md-4">@card.Content</div>
+				<div style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
+					@if (card.Selected)
+					{
+						@card.Content
+					}
+				</div>
 			}
 		</div>
 	} else
@@ -33,6 +38,8 @@
 	};
 	private static Random random = new();
 	private List<Card> shuffledCards = new();
+
+	private Card[] selectedCards = new Card[2];
 
 	protected override void OnAfterRender(bool firstRender)
 	{
