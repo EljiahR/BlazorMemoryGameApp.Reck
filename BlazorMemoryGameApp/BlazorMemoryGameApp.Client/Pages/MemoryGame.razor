@@ -4,50 +4,72 @@
 
 <h3>Memory Game</h3>
 
-<div class="container px-4">
-	@if (shuffledCards.Count > 0)
-	{
-		<div class="row g-5">
-			@foreach (var card in shuffledCards)
-			{
-				<div @onclick=@(() => SelectCardAsync(card)) style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
-					@if (card.Selected || card.Matched)
-					{
-						@card.Content
-					}
-				</div>
-			}
-		</div>
-	} else
-	{
-		<div>Loading...</div>
-	}
+@if (cards.Count == 0)
+{
+	<p>Loading...</p>
+}
+else if (gameState == GameState.Menu)
+{
+	<button @onclick=@(() => ChangeGameState(GameState.Play)) class="btn btn-primary">Start</button>
+} else if (gameState == GameState.Play)
+{
+	<div class="row g-5">
+		@foreach (var card in cards)
+		{
+			<div @onclick=@(() => SelectCardAsync(card)) style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
+				@if (card.Selected || card.Matched)
+				{
+					@card.Content
+				}
+			</div>
+		}
+	</div>
+} else if(gameState == GameState.Result)
+{
+	<div>You Won!</div>
+	<button @onclick=@(() => ResetGame()) class="btn btn-primary">Play Again?</button>
+} else
+{
+	<p>Error</p>
+}
 
-</div>
 
 
 @code {
 
-	private static List<Card> cards = new List<Card> { 
-		new Card { Id = 1, Content = "B" }, 
-		new Card { Id = 2, Content = "P" }, 
-		new Card { Id = 3, Content = "D" }, 
-		new Card { Id = 1, Content = "B" }, 
-		new Card { Id = 2, Content = "P" }, 
-		new Card { Id = 3, Content = "D" } 
-	};
+	private static List<Card> cards = new();
+
+	private enum GameState {
+		Menu,
+		Play,
+		Result
+	}
+
+	private GameState gameState = GameState.Menu;
+
 	private static Random random = new();
-	private List<Card> shuffledCards = new();
 
 	private Card? previousCard;
 	private bool IsCheckingCard = false;
+
+	private bool WonGame = false;
+
 
 	protected override void OnAfterRender(bool firstRender)
 	{
 
 		if (firstRender)
 		{
-			shuffledCards = cards.OrderBy(x => random.Next()).ToList();
+			cards = new List<Card> {
+				new Card { Id = 1, Content = "B" },
+				new Card { Id = 2, Content = "P" },
+				new Card { Id = 3, Content = "D" },
+				new Card { Id = 1, Content = "B" },
+				new Card { Id = 2, Content = "P" },
+				new Card { Id = 3, Content = "D" }
+			};
+
+			cards = cards.OrderBy(x => random.Next()).ToList();
 			StateHasChanged();
 		}
 	}
@@ -63,6 +85,7 @@
 			selectedCard.Matched = true;
 			previousCard.Matched = true;
 			previousCard = null;
+			CheckGameStatus();
 		}
 		else if(previousCard != null && previousCard.Id != selectedCard.Id)
 		{
@@ -77,8 +100,37 @@
 			previousCard = selectedCard;
 		}
 
-		
+
 	}
 
+	private void CheckGameStatus()
+	{
+		if (cards.All(card => card.Matched))
+		{
+			gameState = GameState.Result;
+		}
+	}
+
+	private void ChangeGameState(GameState newGameState)
+	{
+		gameState = newGameState;
+	}
+
+	private void ResetGame()
+	{
+		ReshuffleCards();
+		ChangeGameState(GameState.Play);
+	}
+
+	private void ReshuffleCards()
+	{
+		foreach (var card in cards)
+		{
+			card.Selected = false;
+			card.Matched = false;
+		}
+
+		cards = cards.OrderBy(x => random.Next()).ToList();
+	}
 
 }
