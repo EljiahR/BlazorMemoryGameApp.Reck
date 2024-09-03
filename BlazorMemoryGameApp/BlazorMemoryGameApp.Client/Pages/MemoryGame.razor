@@ -10,7 +10,7 @@
 		<div class="row g-5">
 			@foreach (var card in shuffledCards)
 			{
-				<div style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
+				<div @onclick=@(() => SelectCard(card)) style="height: 18rem;" class="col-4 card text-white bg-primary text-center">
 					@if (card.Selected)
 					{
 						@card.Content
@@ -39,7 +39,7 @@
 	private static Random random = new();
 	private List<Card> shuffledCards = new();
 
-	private Card[] selectedCards = new Card[2];
+	private Card? previousCard;
 
 	protected override void OnAfterRender(bool firstRender)
 	{
@@ -49,6 +49,12 @@
 			shuffledCards = cards.OrderBy(x => random.Next()).ToList();
 			StateHasChanged();
 		}
+	}
+
+	private void SelectCard(Card selectedCard)
+	{
+		selectedCard.Selected = true;
+		previousCard = selectedCard;
 	}
 
 
