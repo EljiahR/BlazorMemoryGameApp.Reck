@@ -1,12 +1,19 @@
-using BlazorMemoryGameApp.Client.Pages;
+﻿using BlazorMemoryGameApp.Client.Pages;
 using BlazorMemoryGameApp.Components;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using BlazorMemoryGameApp.Data;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddDbContext<GamesContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("GamesContext") ?? throw new InvalidOperationException("Connection string 'GamesContext' not found.")));
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
 	.AddInteractiveWebAssemblyComponents();
+
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -31,5 +38,7 @@ app.MapRazorComponents<App>()
 	.AddInteractiveServerRenderMode()
 	.AddInteractiveWebAssemblyRenderMode()
 	.AddAdditionalAssemblies(typeof(BlazorMemoryGameApp.Client._Imports).Assembly);
+
+app.MapControllers();
 
 app.Run();
