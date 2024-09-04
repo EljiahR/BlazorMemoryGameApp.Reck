@@ -1,0 +1,43 @@
+﻿.game-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    gap:20px;
+}
+
+
+.flip-card {
+    background-color: transparent;
+    
+}
+
+.flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.flip-card-inner.flipped {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    border: 1px solid black;
+}
+
+.flip-card-front {
+    transform: rotateY(180deg);
+    background-color: cadetblue;
+}
+
+.flip-card-back {
+    background-color:darkcyan;
+}

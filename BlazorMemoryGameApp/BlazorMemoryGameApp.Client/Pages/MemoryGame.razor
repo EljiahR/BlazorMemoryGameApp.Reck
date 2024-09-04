@@ -56,14 +56,15 @@ else if (gameState == GameState.Menu)
 {
 	
 	<div>Time: @Time</div>
-	<div class="row g-3">
+	<div class="game-container">
 		@foreach (var card in cards)
 		{
-			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="col-4 card text-white bg-primary text-center">
-				@if (card.Selected)
-				{
-					@card.Content
-				}
+			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="flip-card">
+				<div class="@("flip-card-inner" + (card.Selected ? " flipped" : ""))">
+					<div class="flip-card-front">@card.Content</div>
+					<div class="flip-card-back"></div>
+				</div>
+				
 			</div>
 		}
 	</div>
