@@ -6,18 +6,20 @@ namespace BlazorMemoryGameApp.Client.Pages
 {
 	public partial class MemoryGame
 	{
-		private static List<Card> cards = new List<Card> {
-			new Card { Id = 1, Content = "B" },
-			new Card { Id = 2, Content = "P" },
-			new Card { Id = 3, Content = "D" },
-			new Card { Id = 1, Content = "B" },
-			new Card { Id = 2, Content = "P" },
-			new Card { Id = 3, Content = "D" },
-			new Card { Id = 4, Content = "E"},
-			new Card { Id = 4, Content = "E"},
-			new Card { Id = 5, Content = "C", Matched = true, NoPair = true}
-		};
+		private static Card card1 = new Card { Id = 1, Content = "B" };
+		private static Card card2 = new Card { Id = 2, Content = "P" };
+		private static Card card3 = new Card { Id = 3, Content = "D" };
+		private static Card card4 = new Card { Id = 4, Content = "F" };
+		private static Card card5 = new Card { Id = 5, Content = "C", Matched = true, NoPair = true};
+		private static Card card6 = card1.Clone();
+		private static Card card7 = card2.Clone();
+		private static Card card8 = card3.Clone();
+		private static Card card9 = card4.Clone();
 
+		private static List<Card> cards = new List<Card> {
+			card1, card2, card3, card4, card5, card6, card7, card8, card9
+		};
+		Card newishcard = cards[1].Clone();
 		private enum GameState
 		{
 			Menu,
@@ -95,7 +97,16 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private async Task EndGameAsync()
 		{
 			StopTimer();
-			lastGamePlayed = await CreateGameLogAsync();
+			try
+			{
+				lastGamePlayed = await CreateGameLogAsync();
+
+			}
+			catch (Exception ex)
+			{
+				// 
+				Console.WriteLine(ex.Message);
+			}
 			ChangeGameState(GameState.Result);
 		}
 
