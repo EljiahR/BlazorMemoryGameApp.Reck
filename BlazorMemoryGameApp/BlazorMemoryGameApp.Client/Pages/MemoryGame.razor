@@ -11,7 +11,8 @@
 }
 else if (gameState == GameState.Menu)
 {
-	<button @onclick=@(() => StartGame()) class="btn btn-primary">Start</button>
+	<InputText placeholder="Your name" @bind-Value="@currentPlayer" />
+	<button @onclick="StartGame" class="btn btn-primary">Start</button>
 	<table class="table">
 		<thead>
 			<tr>
@@ -50,7 +51,8 @@ else if (gameState == GameState.Menu)
 {
 	<div>You Won!</div>
 	<div>Your Time: @Time</div>
-	<button @onclick=@(() => ResetGame()) class="btn btn-primary">Play Again?</button>
+	<button @onclick="StartGame" class="btn btn-primary">Play Again?</button>
+	<button @onclick=@(async () => await GoToMenu()) class="btn btn-primary">Return to menu</button>
 } else
 {
 	<p>Error</p>
@@ -60,13 +62,25 @@ else if (gameState == GameState.Menu)
 
 @code {
 
-	private static List<Card> cards = new();
+	private static List<Card> cards = new List<Card> {
+			new Card { Id = 1, Content = "B" },
+			new Card { Id = 2, Content = "P" },
+			new Card { Id = 3, Content = "D" },
+			new Card { Id = 1, Content = "B" },
+			new Card { Id = 2, Content = "P" },
+			new Card { Id = 3, Content = "D" },
+			new Card { Id = 4, Content = "E"},
+			new Card { Id = 4, Content = "E"},
+			new Card { Id = 5, Content = "C", Matched = true, NoPair = true}
+		};
 
 	private enum GameState {
 		Menu,
 		Play,
 		Result
 	}
+
+	private string? currentPlayer;
 
 	private GameState gameState = GameState.Menu;
 
@@ -88,20 +102,7 @@ else if (gameState == GameState.Menu)
 	{
 
 		if (firstRender)
-		{
-			cards = new List<Card> {
-				new Card { Id = 1, Content = "B" },
-				new Card { Id = 2, Content = "P" },
-				new Card { Id = 3, Content = "D" },
-				new Card { Id = 1, Content = "B" },
-				new Card { Id = 2, Content = "P" },
-				new Card { Id = 3, Content = "D" },
-				new Card { Id = 4, Content = "E"},
-				new Card { Id = 4, Content = "E"},
-				new Card { Id = 5, Content = "C", Matched = true, NoPair = true}
-			};
-
-			cards = cards.OrderBy(x => random.Next()).ToList();
+		{	
 			await GetScoresAsync();
 			StateHasChanged();
 		}
@@ -147,8 +148,8 @@ else if (gameState == GameState.Menu)
 	private async Task EndGameAsync()
 	{
 		StopTimer();
-		gameState = GameState.Result;
 		lastGamePlayed = await CreateGameLogAsync();
+		ChangeGameState(GameState.Result);
 	}
 
 	private void ChangeGameState(GameState newGameState)
@@ -156,13 +157,14 @@ else if (gameState == GameState.Menu)
 		gameState = newGameState;
 	}
 
-	private void StartGame()
+	private async Task GoToMenu()
 	{
-		ChangeGameState(GameState.Play);
-		StartTimer();
+		ChangeGameState(GameState.Menu);
+		await GetScoresAsync();
+		StateHasChanged();
 	}
 
-	private void ResetGame()
+	private void StartGame()
 	{
 		ReshuffleCards();
 		ChangeGameState(GameState.Play);
@@ -207,11 +209,13 @@ else if (gameState == GameState.Menu)
 
 	}
 
-	private async Task<Games> CreateGameLogAsync(string playerName = "Anon", string gameType = "regular", string difficulty = "easy", int finishedRounds = 1)
+	private async Task<Games> CreateGameLogAsync(string gameType = "regular", string difficulty = "easy", int finishedRounds = 1)
 	{
-		TimeSpan duration = TimeSpan.Parse(Time);
+		TimeSpan duration = TimeSpan.ParseExact(Time, @"mm\:ss", null);
 		Games newGameLog = new Games
 			{
+				PlayerName = string.IsNullOrEmpty(currentPlayer) ? "Anon" : currentPlayer,
+				Duration = duration,
 				DatePlayed = DateTime.Today,
 				GameType = gameType,
 				Difficulty = difficulty,
