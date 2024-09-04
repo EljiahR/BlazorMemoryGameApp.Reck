@@ -13,6 +13,8 @@ builder.Services.AddRazorComponents()
 	.AddInteractiveServerComponents()
 	.AddInteractiveWebAssemblyComponents();
 
+builder.Services.AddHttpClient();
+
 builder.Services.AddControllers();
 
 var app = builder.Build();
