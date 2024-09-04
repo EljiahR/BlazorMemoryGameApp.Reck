@@ -12,6 +12,25 @@
 else if (gameState == GameState.Menu)
 {
 	<button @onclick=@(() => StartGame()) class="btn btn-primary">Start</button>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>Name</th>
+				<th>Duration</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			@foreach (var log in scoreboard)
+			{
+				<tr>
+					<td>@log.PlayerName</td>
+					<td>@log.Duration.ToString(@"mm\:ss")</td>
+					<td>@log.DatePlayed.ToString(@"MM/d")</td>
+				</tr>
+			}
+		</tbody>
+	</table>
 } else if (gameState == GameState.Play)
 {
 	
@@ -62,8 +81,10 @@ else if (gameState == GameState.Menu)
 	private System.Timers.Timer timer = null!;
 	private string Time = "00:00";
 
+	private List<Games> scoreboard = new();
+	private Games lastGamePlayed = new();
 
-	protected override void OnAfterRender(bool firstRender)
+	protected override async Task OnAfterRenderAsync(bool firstRender)
 	{
 
 		if (firstRender)
@@ -81,6 +102,7 @@ else if (gameState == GameState.Menu)
 			};
 
 			cards = cards.OrderBy(x => random.Next()).ToList();
+			await GetScoresAsync();
 			StateHasChanged();
 		}
 	}
@@ -96,7 +118,7 @@ else if (gameState == GameState.Menu)
 			selectedCard.Matched = true;
 			previousCard.Matched = true;
 			previousCard = null;
-			CheckGameStatus();
+			await CheckGameStatusAsync();
 		}
 		else if(previousCard != null && previousCard.Id != selectedCard.Id)
 		{
@@ -114,13 +136,19 @@ else if (gameState == GameState.Menu)
 
 	}
 
-	private void CheckGameStatus()
+	private async Task CheckGameStatusAsync()
 	{
 		if (cards.All(card => card.Matched))
 		{
-			StopTimer();
-			gameState = GameState.Result;
+			await EndGameAsync();
 		}
+	}
+
+	private async Task EndGameAsync()
+	{
+		StopTimer();
+		gameState = GameState.Result;
+		lastGamePlayed = await CreateGameLogAsync();
 	}
 
 	private void ChangeGameState(GameState newGameState)
@@ -177,5 +205,24 @@ else if (gameState == GameState.Menu)
 			StateHasChanged();
 		});
 
+	}
+
+	private async Task<Games> CreateGameLogAsync(string playerName = "Anon", string gameType = "regular", string difficulty = "easy", int finishedRounds = 1)
+	{
+		TimeSpan duration = TimeSpan.Parse(Time);
+		Games newGameLog = new Games
+			{
+				DatePlayed = DateTime.Today,
+				GameType = gameType,
+				Difficulty = difficulty,
+				FinishedRounds = finishedRounds
+			};
+		var result = await Http.PostAsJsonAsync<Games>("api/Games", newGameLog);
+		return await result.Content.ReadFromJsonAsync<Games>() ?? new Games();
+	}
+
+	private async Task GetScoresAsync()
+	{
+		scoreboard = await Http.GetFromJsonAsync<List<Games>>("api/Games") ?? new();
 	}
 }

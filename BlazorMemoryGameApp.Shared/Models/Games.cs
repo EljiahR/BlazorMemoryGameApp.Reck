@@ -11,6 +11,8 @@ public class Games
 {
 	public int Id { get; set; }
 	[Required]
+	public string? PlayerName { get; set; }
+	[Required]
 	public DateTime DatePlayed { get; set; }
 	[Required]
 	public TimeSpan Duration { get; set; }

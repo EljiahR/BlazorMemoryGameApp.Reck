@@ -25,7 +25,7 @@ namespace BlazorMemoryGameApp.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Games>>> GetGames()
         {
-            return await _context.Games.ToListAsync();
+            return await _context.Games.OrderBy(game => game.Duration).ToListAsync();
         }
 
         // GET: api/Games/5
