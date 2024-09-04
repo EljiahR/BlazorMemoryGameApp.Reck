@@ -3,6 +3,8 @@
 @inject NavigationManager Navigation
 @inject HttpClient Http
 
+<PageTitle>Memory Game</PageTitle>
+
 <h3 class="text-center">Memory Game</h3>
 
 @if (cards.Count == 0)
@@ -22,14 +24,32 @@ else if (gameState == GameState.Menu)
 			</tr>
 		</thead>
 		<tbody>
-			@foreach (var log in scoreboard)
+			@if (scoreboardIsLoading)
 			{
 				<tr>
-					<td>@log.PlayerName</td>
-					<td>@log.Duration.ToString(@"mm\:ss")</td>
-					<td>@log.DatePlayed.ToString(@"MM/d")</td>
+					<td>Loading...</td>
+					<td>Loading...</td>
+					<td>Loading...</td>
 				</tr>
+			} else if (!scoreboardIsLoading && scoreboard.Count == 0)
+			{
+				<tr>
+					<td></td>
+					<td>No results</td>
+					<td></td>
+				</tr>
+			} else
+			{
+				@foreach (var log in scoreboard)
+				{
+					<tr>
+						<td>@log.PlayerName</td>
+						<td>@log.Duration.ToString(@"mm\:ss")</td>
+						<td>@log.DatePlayed.ToString(@"MM/d")</td>
+					</tr>
+				}
 			}
+			
 		</tbody>
 	</table>
 } else if (gameState == GameState.Play)
@@ -96,6 +116,7 @@ else if (gameState == GameState.Menu)
 	private string Time = "00:00";
 
 	private List<Games> scoreboard = new();
+	private bool scoreboardIsLoading = true;
 	private Games lastGamePlayed = new();
 
 	protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -227,6 +248,8 @@ else if (gameState == GameState.Menu)
 
 	private async Task GetScoresAsync()
 	{
+		scoreboardIsLoading = true;
 		scoreboard = await Http.GetFromJsonAsync<List<Games>>("api/Games") ?? new();
+		scoreboardIsLoading = false;
 	}
 }
