@@ -10,21 +10,23 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private static Card card2 = new Card { Id = 2, Content = "P" };
 		private static Card card3 = new Card { Id = 3, Content = "D" };
 		private static Card card4 = new Card { Id = 4, Content = "F" };
-		private static Card card5 = new Card { Id = 5, Content = "C", Matched = true, NoPair = true};
-		private static Card card6 = card1.Clone();
-		private static Card card7 = card2.Clone();
-		private static Card card8 = card3.Clone();
-		private static Card card9 = card4.Clone();
+		private static Card card5 = new Card { Id = 5, Content = "C"};
 
-		private static List<Card> cards = new List<Card> {
-			card1, card2, card3, card4, card5, card6, card7, card8, card9
-		};
-		Card newishcard = cards[1].Clone();
+		private static List<Card> fullDeck = new List<Card> { card1, card2, card3, card4, card5 };
+
+		private static List<Card> cards = new();
 		private enum GameState
 		{
 			Menu,
 			Play,
 			Result
+		}
+
+		private enum Difficulty
+		{
+			Easy,
+			Medium,
+			Hard
 		}
 
 		private string? currentPlayer;
@@ -129,15 +131,43 @@ namespace BlazorMemoryGameApp.Client.Pages
 			StartTimer();
 		}
 
-		private void ReshuffleCards()
+		private void ReshuffleCards(Difficulty difficulty = Difficulty.Easy)
 		{
-			foreach (var card in cards)
+			Card[] chosenCards;
+			List<Card> usedCards = new();
+			int deckSize;
+			switch (difficulty)
 			{
-				card.Selected = false;
-				card.Matched = card.NoPair;
+				default:
+					deckSize = 9;
+					break;
 			}
+			chosenCards = new Card[deckSize];
+			for (int i = 0; i < chosenCards.Length; i++)
+			{
+				if (i % 2 != 0 && i != chosenCards.Length - 1) continue;
+				while (chosenCards[i] == null)
+				{
+					var nextCard = fullDeck[random.Next(fullDeck.Count)];
+					if (!usedCards.Contains(nextCard))
+					{
+						usedCards.Add(nextCard);
+						if (i == chosenCards.Length - 1)
+						{
+							chosenCards[i] = nextCard.Clone();
+							chosenCards[i].Matched = true;
+							chosenCards[i].NoPair = true;
+						}
+						else
+						{
+							chosenCards[i] = nextCard.Clone();
+							chosenCards[i + 1] = nextCard.Clone();
+						}
+					}
+				}
 
-			cards = cards.OrderBy(x => random.Next()).ToList();
+			}
+			cards = chosenCards.OrderBy(x => random.Next()).ToList();
 		}
 
 		private void StartTimer()

@@ -7,11 +7,7 @@
 
 <h3 class="text-center">Memory Game</h3>
 
-@if (cards.Count == 0)
-{
-	<p>Loading...</p>
-}
-else if (gameState == GameState.Menu)
+@if (gameState == GameState.Menu)
 {
 	<InputText placeholder="Your name" @bind-Value="@currentPlayer" />
 	<button @onclick="StartGame" class="btn btn-primary">Start</button>
