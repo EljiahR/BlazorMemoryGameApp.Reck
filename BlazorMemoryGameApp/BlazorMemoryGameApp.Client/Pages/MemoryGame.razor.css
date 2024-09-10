@@ -36,6 +36,10 @@
 .flip-card-front {
     transform: rotateY(180deg);
     background-color: cadetblue;
+    font-size: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .flip-card-back {
