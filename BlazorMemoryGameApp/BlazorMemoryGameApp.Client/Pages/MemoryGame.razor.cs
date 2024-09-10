@@ -42,6 +42,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		private int secondsRun = 0;
 		private System.Timers.Timer timer = null!;
+		private bool timerIsRunning = true;
 		private string Time = "00:00";
 
 		private List<Games> scoreboard = new();
@@ -96,9 +97,21 @@ namespace BlazorMemoryGameApp.Client.Pages
 			}
 		}
 
+		private void RevealAllCards()
+		{
+			foreach (var card in cards) card.Selected = true;
+		}
+
+		// Only works on fresh games
+		private void HideAllCards()
+		{
+			foreach (var card in cards) card.Selected = false;
+		}
+
 		private async Task EndGameAsync()
 		{
 			StopTimer();
+			RevealAllCards(); // For games that have an odd number of cards
 			try
 			{
 				lastGamePlayed = await CreateGameLogAsync();
@@ -109,6 +122,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 				// 
 				Console.WriteLine(ex.Message);
 			}
+			await Task.Delay(1000);
 			ChangeGameState(GameState.Result);
 		}
 
@@ -126,6 +140,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		private void StartGame()
 		{
+			timerIsRunning = true;
 			ReshuffleCards();
 			ChangeGameState(GameState.Play);
 			StartTimer();
@@ -177,13 +192,13 @@ namespace BlazorMemoryGameApp.Client.Pages
 			timer = new System.Timers.Timer(1000);
 			timer.Elapsed += OnTimedEvent;
 			timer.Start();
-
 		}
 
 		private void StopTimer()
 		{
 			timer.Stop();
 			timer.Dispose();
+			timerIsRunning = false;
 		}
 
 		private async void OnTimedEvent(object? source, ElapsedEventArgs e)

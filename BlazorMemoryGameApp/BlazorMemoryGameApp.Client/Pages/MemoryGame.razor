@@ -51,7 +51,7 @@
 } else if (gameState == GameState.Play)
 {
 	
-	<div>Time: @Time</div>
+	<div class="@(timerIsRunning ? "" : "timer-stopped")">Time: @Time</div>
 	<div class="game-container">
 		@foreach (var card in cards)
 		{

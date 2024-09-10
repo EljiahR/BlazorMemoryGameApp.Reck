@@ -41,3 +41,7 @@
 .flip-card-back {
     background-color:darkcyan;
 }
+
+.timer-stopped {
+    color: green;
+}
