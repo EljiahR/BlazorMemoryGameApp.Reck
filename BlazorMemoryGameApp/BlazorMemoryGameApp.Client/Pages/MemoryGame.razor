@@ -1,4 +1,4 @@
-﻿@page "/memorygame"
+﻿@page "/"
 @rendermode InteractiveWebAssembly
 @inject NavigationManager Navigation
 @inject HttpClient Http
@@ -70,7 +70,7 @@
 		
 		@foreach (var card in cards)
 		{
-			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="flip-card">
+			<div @onclick=@(() => SelectCardAsync(card)) class="flip-card">
 				<div class="@("flip-card-inner" + (card.Selected || card.ForceShow ? " flipped" : ""))">
 					<div class="flip-card-front">@card.Content</div>
 					<div class="flip-card-back"></div>
