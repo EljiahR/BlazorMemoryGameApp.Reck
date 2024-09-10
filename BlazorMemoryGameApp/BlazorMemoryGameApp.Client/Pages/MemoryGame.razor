@@ -10,7 +10,9 @@
 @if (gameState == GameState.Menu)
 {
 	<InputText placeholder="Your name" @bind-Value="@currentPlayer" />
-	<button @onclick="StartGame" class="btn btn-primary">Start</button>
+	<button @onclick="@(() => StartGame(Difficulty.Easy))" class="btn btn-primary">Easy</button>
+	<button @onclick="@(() => StartGame(Difficulty.Medium))" class="btn btn-primary">Medium</button>
+	<button @onclick="@(() => StartGame(Difficulty.Hard))" class="btn btn-primary">Hard</button>
 	<table class="table">
 		<thead>
 			<tr>
@@ -52,7 +54,7 @@
 {
 	
 	<div class="text-center@(timerIsRunning ? "" : " timer-stopped")">Time: @Time</div>
-	<div class="game-container">
+	<div class="game-container @difficulty">
 		@foreach (var card in cards)
 		{
 			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="flip-card">
@@ -68,7 +70,7 @@
 {
 	<div>You Won!</div>
 	<div>Your Time: @Time</div>
-	<button @onclick="StartGame" class="btn btn-primary">Play Again?</button>
+	<button @onclick="@(() => StartGame())" class="btn btn-primary">Play Again?</button>
 	<button @onclick=@(async () => await GoToMenu()) class="btn btn-primary">Return to menu</button>
 } else
 {

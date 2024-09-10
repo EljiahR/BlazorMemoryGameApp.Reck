@@ -6,13 +6,24 @@ namespace BlazorMemoryGameApp.Client.Pages
 {
 	public partial class MemoryGame
 	{
-		private static Card card1 = new Card { Id = 1, Content = "B" };
-		private static Card card2 = new Card { Id = 2, Content = "P" };
-		private static Card card3 = new Card { Id = 3, Content = "D" };
-		private static Card card4 = new Card { Id = 4, Content = "F" };
-		private static Card card5 = new Card { Id = 5, Content = "C"};
+		private static Card card1 = new Card { Id = 1, Content = "A" };
+		private static Card card2 = new Card { Id = 2, Content = "B" };
+		private static Card card3 = new Card { Id = 3, Content = "C" };
+		private static Card card4 = new Card { Id = 4, Content = "D" };
+		private static Card card5 = new Card { Id = 5, Content = "E"};
+		private static Card card6 = new Card { Id = 1, Content = "F" };
+		private static Card card7 = new Card { Id = 2, Content = "G" };
+		private static Card card8 = new Card { Id = 3, Content = "H" };
+		private static Card card9 = new Card { Id = 4, Content = "I" };
+		private static Card card10 = new Card { Id = 5, Content = "J" };
+		private static Card card11 = new Card { Id = 3, Content = "K" };
+		private static Card card12 = new Card { Id = 4, Content = "L" };
+		private static Card card13 = new Card { Id = 5, Content = "M" };
 
-		private static List<Card> fullDeck = new List<Card> { card1, card2, card3, card4, card5 };
+		private static List<Card> fullDeck = new List<Card> { 
+			card1, card2, card3, card4, card5, card6, card7, card8,
+			card9, card10, card11, card12, card13  
+		};
 
 		private static List<Card> cards = new();
 		private enum GameState
@@ -26,12 +37,14 @@ namespace BlazorMemoryGameApp.Client.Pages
 		{
 			Easy,
 			Medium,
-			Hard
+			Hard,
+			Replay
 		}
 
 		private string? currentPlayer;
 
 		private GameState gameState = GameState.Menu;
+		private Difficulty difficulty = Difficulty.Easy;
 
 		private static Random random = new();
 
@@ -138,21 +151,28 @@ namespace BlazorMemoryGameApp.Client.Pages
 			StateHasChanged();
 		}
 
-		private void StartGame()
+		private void StartGame(Difficulty newDifficulty = Difficulty.Replay)
 		{
+			if(newDifficulty != Difficulty.Replay) difficulty = newDifficulty;
 			timerIsRunning = true;
 			ReshuffleCards();
 			ChangeGameState(GameState.Play);
 			StartTimer();
 		}
 
-		private void ReshuffleCards(Difficulty difficulty = Difficulty.Easy)
+		private void ReshuffleCards()
 		{
 			Card[] chosenCards;
 			List<Card> usedCards = new();
 			int deckSize;
 			switch (difficulty)
 			{
+				case Difficulty.Hard:
+					deckSize = 25;
+					break;
+				case Difficulty.Medium:
+					deckSize = 16;
+					break;
 				default:
 					deckSize = 9;
 					break;
