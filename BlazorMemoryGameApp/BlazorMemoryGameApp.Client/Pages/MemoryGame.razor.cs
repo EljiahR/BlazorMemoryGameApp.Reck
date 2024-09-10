@@ -1,4 +1,5 @@
 ﻿using BlazorMemoryGameApp.Shared.Models;
+using Microsoft.AspNetCore.Components;
 using System.Net.Http.Json;
 using System.Timers;
 
@@ -11,14 +12,14 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private static Card card3 = new Card { Id = 3, Content = "C" };
 		private static Card card4 = new Card { Id = 4, Content = "D" };
 		private static Card card5 = new Card { Id = 5, Content = "E"};
-		private static Card card6 = new Card { Id = 1, Content = "F" };
-		private static Card card7 = new Card { Id = 2, Content = "G" };
-		private static Card card8 = new Card { Id = 3, Content = "H" };
-		private static Card card9 = new Card { Id = 4, Content = "I" };
-		private static Card card10 = new Card { Id = 5, Content = "J" };
-		private static Card card11 = new Card { Id = 3, Content = "K" };
-		private static Card card12 = new Card { Id = 4, Content = "L" };
-		private static Card card13 = new Card { Id = 5, Content = "M" };
+		private static Card card6 = new Card { Id = 6, Content = "F" };
+		private static Card card7 = new Card { Id = 7, Content = "G" };
+		private static Card card8 = new Card { Id = 8, Content = "H" };
+		private static Card card9 = new Card { Id = 9, Content = "I" };
+		private static Card card10 = new Card { Id = 10, Content = "J" };
+		private static Card card11 = new Card { Id = 11, Content = "K" };
+		private static Card card12 = new Card { Id = 12, Content = "L" };
+		private static Card card13 = new Card { Id = 13, Content = "M" };
 
 		private static List<Card> fullDeck = new List<Card> { 
 			card1, card2, card3, card4, card5, card6, card7, card8,
@@ -155,6 +156,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private async Task StartGame(Difficulty newDifficulty = Difficulty.Replay)
 		{
 			if(newDifficulty != Difficulty.Replay) difficulty = newDifficulty;
+			scoreboardDifficulty = newDifficulty == Difficulty.Replay ? scoreboardDifficulty : newDifficulty;
 			timerIsRunning = true;
 			ReshuffleCards();
 			ChangeGameState(GameState.Play);
@@ -237,7 +239,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		}
 
-		private async Task<Games> CreateGameLogAsync(string gameType = "regular", string difficulty = "easy", int finishedRounds = 1)
+		private async Task<Games> CreateGameLogAsync(string gameType = "regular", int finishedRounds = 1)
 		{
 			TimeSpan duration = TimeSpan.ParseExact(Time, @"mm\:ss", null);
 			Games newGameLog = new Games
@@ -246,7 +248,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 				Duration = duration,
 				DatePlayed = DateTime.Today,
 				GameType = gameType,
-				Difficulty = difficulty,
+				Difficulty = difficulty.ToString(),
 				FinishedRounds = finishedRounds
 			};
 			var result = await Http.PostAsJsonAsync<Games>("api/Games", newGameLog);
@@ -256,7 +258,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private async Task GetScoresAsync()
 		{
 			scoreboardIsLoading = true;
-			scoreboard = await Http.GetFromJsonAsync<List<Games>>($"api/Games/{difficulty}") ?? new();
+			scoreboard = await Http.GetFromJsonAsync<List<Games>>($"api/Games/{scoreboardDifficulty}") ?? new();
 			scoreboardIsLoading = false;
 		}
 	}

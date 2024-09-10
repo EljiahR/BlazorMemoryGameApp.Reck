@@ -32,7 +32,7 @@ namespace BlazorMemoryGameApp.Controllers
         [HttpGet("{difficulty}")]
         public async Task<ActionResult<IEnumerable<Games>>> GetGamesByDifficulty(string difficulty)
         {
-            var games = await _context.Games.Where(x => x.Difficulty == difficulty).Take(10).ToListAsync();
+            var games = await _context.Games.Where(x => x.Difficulty == difficulty).OrderBy(game => game.Duration).Take(10).ToListAsync();
 
             if (games == null)
             {
