@@ -28,11 +28,11 @@ namespace BlazorMemoryGameApp.Controllers
             return await _context.Games.OrderBy(game => game.Duration).Take(10).ToListAsync();
         }
 
-        // GET: api/Games/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Games>> GetGames(int id)
+        // GET: api/Games/{difficulty}
+        [HttpGet("{difficulty}")]
+        public async Task<ActionResult<IEnumerable<Games>>> GetGamesByDifficulty(string difficulty)
         {
-            var games = await _context.Games.FindAsync(id);
+            var games = await _context.Games.Where(x => x.Difficulty == difficulty).Take(10).ToListAsync();
 
             if (games == null)
             {

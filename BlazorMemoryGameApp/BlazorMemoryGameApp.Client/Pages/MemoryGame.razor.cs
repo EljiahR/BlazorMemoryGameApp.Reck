@@ -45,6 +45,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		private GameState gameState = GameState.Menu;
 		private Difficulty difficulty = Difficulty.Easy;
+		private Difficulty scoreboardDifficulty = Difficulty.Easy;
 
 		private static Random random = new();
 
@@ -255,7 +256,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private async Task GetScoresAsync()
 		{
 			scoreboardIsLoading = true;
-			scoreboard = await Http.GetFromJsonAsync<List<Games>>("api/Games") ?? new();
+			scoreboard = await Http.GetFromJsonAsync<List<Games>>($"api/Games/{difficulty}") ?? new();
 			scoreboardIsLoading = false;
 		}
 	}
