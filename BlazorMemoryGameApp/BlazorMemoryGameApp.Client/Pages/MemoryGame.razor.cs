@@ -74,7 +74,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		private async Task SelectCardAsync(Card selectedCard)
 		{
-			if ((selectedCard.Matched && !selectedCard.NoPair) || selectedCard == previousCard || IsCheckingCard) return;
+			if (selectedCard.ForceShow || (selectedCard.Matched && !selectedCard.NoPair) || selectedCard == previousCard || IsCheckingCard) return;
 
 			selectedCard.Selected = true;
 
@@ -112,13 +112,13 @@ namespace BlazorMemoryGameApp.Client.Pages
 
 		private void RevealAllCards()
 		{
-			foreach (var card in cards) card.Selected = true;
+			foreach (var card in cards) card.ForceShow = true;
 		}
 
 		// Only works on fresh games
 		private void HideAllCards()
 		{
-			foreach (var card in cards) card.Selected = false;
+			foreach (var card in cards) card.ForceShow = false;
 		}
 
 		private async Task EndGameAsync()
@@ -151,12 +151,16 @@ namespace BlazorMemoryGameApp.Client.Pages
 			StateHasChanged();
 		}
 
-		private void StartGame(Difficulty newDifficulty = Difficulty.Replay)
+		private async Task StartGame(Difficulty newDifficulty = Difficulty.Replay)
 		{
 			if(newDifficulty != Difficulty.Replay) difficulty = newDifficulty;
 			timerIsRunning = true;
 			ReshuffleCards();
 			ChangeGameState(GameState.Play);
+			RevealAllCards();
+			await Task.Delay(1000);
+			HideAllCards();
+			await Task.Delay(800); // Animation is 0.8 seconds long
 			StartTimer();
 		}
 

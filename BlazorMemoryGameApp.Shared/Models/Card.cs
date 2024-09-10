@@ -16,6 +16,7 @@ public class Card
 	public bool Matched { get; set; } = false;
 
 	public bool NoPair { get; set; } = false;
+	public bool ForceShow { get; set; } = false;
 }
 
 public static class SystemExtension

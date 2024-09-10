@@ -55,10 +55,11 @@
 	
 	<div class="text-center@(timerIsRunning ? "" : " timer-stopped")">Time: @Time</div>
 	<div class="game-container @difficulty">
+		
 		@foreach (var card in cards)
 		{
 			<div @onclick=@(() => SelectCardAsync(card)) style="height: 12rem;" class="flip-card">
-				<div class="@("flip-card-inner" + (card.Selected ? " flipped" : ""))">
+				<div class="@("flip-card-inner" + (card.Selected || card.ForceShow ? " flipped" : ""))">
 					<div class="flip-card-front">@card.Content</div>
 					<div class="flip-card-back"></div>
 				</div>
