@@ -9,7 +9,7 @@
 
 @if (gameState == GameState.Menu)
 {
-	<div>
+	<div class="mb-1">
 		<InputText placeholder="Your name" @bind-Value="currentPlayer" />
 	</div>
 	<div>
@@ -17,7 +17,7 @@
 		<button @onclick="@(() => StartGame(Difficulty.Medium))" class="btn btn-primary">Medium</button>
 		<button @onclick="@(() => StartGame(Difficulty.Hard))" class="btn btn-primary">Hard</button>
 	</div>
-	<div>
+	<div class="mb-1">
 		<h3>Show Score For </h3>
 		<InputSelect @bind-Value=scoreboardDifficulty @bind-Value:after="GetScoresAsync">
 			<option value="@Difficulty.Easy">Easy</option>
