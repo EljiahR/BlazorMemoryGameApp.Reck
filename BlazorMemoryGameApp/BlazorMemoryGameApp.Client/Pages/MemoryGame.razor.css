@@ -4,7 +4,9 @@
     max-width: 650px;
     display: grid;
     gap:10px;
+    justify-content: center;
 }
+
 .game-container.Easy {
     grid-template-columns: 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr 1fr;
@@ -24,6 +26,8 @@
     background-color: transparent;
     max-width: 110px;
     height: 7rem;
+    justify-self: center;
+    width: 70%;
 }
 
 .flip-card-inner {

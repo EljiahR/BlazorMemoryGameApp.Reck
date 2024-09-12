@@ -48,6 +48,7 @@ namespace BlazorMemoryGameApp.Client.Pages
 		private Difficulty difficulty = Difficulty.Easy;
 		private Difficulty scoreboardDifficulty = Difficulty.Easy;
 
+
 		private static Random random = new();
 
 		private Card? previousCard;
@@ -159,12 +160,13 @@ namespace BlazorMemoryGameApp.Client.Pages
 			scoreboardDifficulty = newDifficulty == Difficulty.Replay ? scoreboardDifficulty : newDifficulty;
 			timerIsRunning = true;
 			ReshuffleCards();
+			Time = "00:00";
 			ChangeGameState(GameState.Play);
 			RevealAllCards();
 			await Task.Delay(1000);
 			HideAllCards();
 			await Task.Delay(800); // Animation is 0.8 seconds long
-			StartTimer();
+			if (gameState == GameState.Play) StartTimer();
 		}
 
 		private void ReshuffleCards()
@@ -260,6 +262,18 @@ namespace BlazorMemoryGameApp.Client.Pages
 			scoreboardIsLoading = true;
 			scoreboard = await Http.GetFromJsonAsync<List<Games>>($"api/Games/{scoreboardDifficulty}") ?? new();
 			scoreboardIsLoading = false;
+		}
+
+		private async Task QuitGame()
+		{
+			try
+			{
+				StopTimer();
+			} catch (Exception ex)
+			{
+				Console.WriteLine(ex.ToString());
+			}
+			await GoToMenu();
 		}
 	}
 }

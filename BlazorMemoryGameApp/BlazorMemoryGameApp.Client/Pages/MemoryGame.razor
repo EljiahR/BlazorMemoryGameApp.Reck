@@ -66,6 +66,7 @@
 {
 	
 	<div class="text-center@(timerIsRunning ? "" : " timer-stopped")">Time: @Time</div>
+	<button class="btn btn-danger mb-1" @onclick="QuitGame">Quit</button>
 	<div class="game-container @difficulty">
 		
 		@foreach (var card in cards)
